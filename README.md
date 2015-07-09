@@ -1,2 +1,2 @@
 # mongodb-java
-Samples of CRUD operation on MongoDB using Java (Driver, Morphia, Spring)
+Samples of CRUD operations on MongoDB using Java (Driver, Morphia, Spring)
