@@ -16,8 +16,8 @@ import org.mongodb.morphia.Datastore;
  */
 public class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
 
-    public final Datastore datastore;
-    public final Class<T> clazz;
+    protected final Datastore datastore;
+    protected final Class<T> clazz;
 
     public BaseDaoImpl(final Class<T> clazz) {
         this.datastore = MongoDB.instance().getDatabase();

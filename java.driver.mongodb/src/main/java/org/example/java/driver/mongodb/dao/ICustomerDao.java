@@ -2,9 +2,7 @@ package org.example.java.driver.mongodb.dao;
 
 import java.util.List;
 
-import org.example.spring.mongodb.entity.Customer;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import org.example.java.driver.mongodb.entity.Customer;
 
 /**
  * DAO class for {@link Customer} entity.
@@ -12,7 +10,7 @@ import org.springframework.data.mongodb.repository.Query;
  * @author adam.bialas
  *
  */
-public interface CustomerDao extends MongoRepository<Customer, String> {
+public interface ICustomerDao extends IBaseDao<Customer> {
 
     List<Customer> findByFirstName(String firstName);
 
@@ -24,7 +22,6 @@ public interface CustomerDao extends MongoRepository<Customer, String> {
 
     List<Customer> findByLastName(String lastName);
 
-    @Query("{'lastName': ?0}")
     List<Customer> findByCustomersLastName(String lastName);
 
     List<Customer> findByFirstNameAndLastName(String firstName, String lastName);

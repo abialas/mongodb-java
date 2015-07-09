@@ -1,7 +1,8 @@
 package org.example.java.driver.mongodb.entity;
 
-import com.sun.corba.se.spi.ior.ObjectId;
-import com.sun.xml.internal.ws.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 /**
  * Customer entity class.
@@ -25,6 +26,20 @@ public class Customer implements IBaseEntity {
         this.lastName = lastName;
         this.address = address;
         this.age = age;
+    }
+
+    /**
+     * @return the id
+     */
+    public ObjectId getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     /**
@@ -91,6 +106,9 @@ public class Customer implements IBaseEntity {
 
     public Document toDocument() {
         final Document document = new Document();
+        if (id != null) {
+            document.append("_id", id.toString());
+        }
         if (StringUtils.isNotEmpty(firstName)) {
             document.append("firstName", firstName);
         }
@@ -105,4 +123,5 @@ public class Customer implements IBaseEntity {
         }
         return document;
     }
+
 }
