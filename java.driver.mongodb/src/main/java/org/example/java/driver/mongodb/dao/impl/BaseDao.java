@@ -23,6 +23,7 @@ public abstract class BaseDao<T extends IBaseEntity> implements IBaseDao<T> {
         this.clazz = clazz;
     }
 
+    @Override
     public T save(T entity) {
         if (entity == null) {
             return null;
@@ -31,18 +32,38 @@ public abstract class BaseDao<T extends IBaseEntity> implements IBaseDao<T> {
         return entity;
     }
 
+    @Override
     public long count() {
         return database.getCollection(getCollectionName()).count();
     }
 
+    @Override
     public T get(ObjectId id) {
 
         return null;
     }
 
+    @Override
     public List<T> findAll() {
-        final MongoCursor<Document> cursor = database.getCollection(getCollectionName()).find().iterator();
+        return cursorToObjectList(database.getCollection(getCollectionName()).find().iterator());
+    }
+
+    @Override
+    public void deleteAll() {
+        database.getCollection(getCollectionName()).deleteMany(new BasicDBObject());
+    }
+
+    @Override
+    public void close() {
+        MongoDB.instance().getMongoClient().close();
+    }
+
+    @Override
+    public List<T> cursorToObjectList(final MongoCursor<Document> cursor) {
         final List<T> result = new ArrayList<T>();
+        if (cursor == null) {
+            return result;
+        }
         try {
             while (cursor.hasNext()) {
                 result.add(parseDocument(cursor.next()));
@@ -51,14 +72,6 @@ public abstract class BaseDao<T extends IBaseEntity> implements IBaseDao<T> {
             cursor.close();
         }
         return result;
-    }
-
-    public void deleteAll() {
-        database.getCollection(getCollectionName()).deleteMany(new BasicDBObject());
-    }
-
-    public void close() {
-        MongoDB.instance().getMongoClient().close();
     }
 
 }

@@ -6,6 +6,8 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.java.driver.mongodb.entity.IBaseEntity;
 
+import com.mongodb.client.MongoCursor;
+
 /**
  * DAO interface for all entities which extends {@link IBaseEntity}.
  *
@@ -29,4 +31,6 @@ public interface IBaseDao<T extends IBaseEntity> {
     String getCollectionName();
 
     T parseDocument(final Document document);
+
+    List<T> cursorToObjectList(final MongoCursor<Document> cursor);
 }

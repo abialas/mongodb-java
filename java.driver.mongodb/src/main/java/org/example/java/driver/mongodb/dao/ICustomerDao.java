@@ -22,8 +22,6 @@ public interface ICustomerDao extends IBaseDao<Customer> {
 
     List<Customer> findByLastName(String lastName);
 
-    List<Customer> findByCustomersLastName(String lastName);
-
     List<Customer> findByFirstNameAndLastName(String firstName, String lastName);
 
     List<Customer> findByAddressBuildingNumberGreaterThan(Integer builingNumber);

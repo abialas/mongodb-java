@@ -1,6 +1,7 @@
 package org.example.java.driver.mongodb.dao.impl;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
@@ -8,91 +9,104 @@ import org.example.java.driver.mongodb.dao.ICustomerDao;
 import org.example.java.driver.mongodb.entity.Address;
 import org.example.java.driver.mongodb.entity.Customer;
 
+import com.mongodb.client.model.Filters;
+
 public class CustomerDao extends BaseDao<Customer>implements ICustomerDao {
 
     public CustomerDao() {
         super(Customer.class);
     }
 
+    @Override
     public List<Customer> findByFirstName(String firstName) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(
+                database.getCollection(getCollectionName()).find(Filters.eq("firstName", firstName)).iterator());
     }
 
+    @Override
     public List<Customer> findTop2ByFirstName(String firstName) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(database.getCollection(getCollectionName()).find(Filters.eq("firstName", firstName))
+                .limit(2).iterator());
     }
 
+    @Override
     public List<Customer> findTop2ByLastName(String lastName) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(
+                database.getCollection(getCollectionName()).find(Filters.eq("lastName", lastName)).limit(2).iterator());
     }
 
+    @Override
     public List<Customer> findByAddressCity(String city) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(
+                database.getCollection(getCollectionName()).find(Filters.eq("address.city", city)).iterator());
     }
 
+    @Override
     public List<Customer> findByLastName(String lastName) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(
+                database.getCollection(getCollectionName()).find(Filters.eq("lastName", lastName)).iterator());
     }
 
-    public List<Customer> findByCustomersLastName(String lastName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    @Override
     public List<Customer> findByFirstNameAndLastName(String firstName, String lastName) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(database.getCollection(getCollectionName())
+                .find(Filters.and(Filters.eq("firstName", firstName), Filters.eq("lastName", lastName))).iterator());
     }
 
+    @Override
     public List<Customer> findByAddressBuildingNumberGreaterThan(Integer builingNumber) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(database.getCollection(getCollectionName())
+                .find(Filters.gt("address.builingNumber", builingNumber)).iterator());
     }
 
+    @Override
     public List<Customer> findByAgeBetween(int ageFrom, int ageTo) {
-        // TODO Auto-generated method stub
-        return null;
+        return cursorToObjectList(database.getCollection(getCollectionName())
+                .find(Filters.and(Filters.gt("age", ageFrom), Filters.lt("age", ageTo))).iterator());
     }
 
+    @Override
     public Customer findOneByLastName(String lastName) {
-        // TODO Auto-generated method stub
-        return null;
+        return parseDocument(
+                database.getCollection(getCollectionName()).find(Filters.eq("lastName", lastName)).first());
     }
 
+    @Override
     public Customer findOneByFirstName(String firstName) {
-        // TODO Auto-generated method stub
-        return null;
+        return parseDocument(
+                database.getCollection(getCollectionName()).find(Filters.eq("firstName", firstName)).first());
     }
 
+    @Override
     public Customer findOneByFirstNameAndLastName(String firstName, String lastName) {
-        // TODO Auto-generated method stub
-        return null;
+        return parseDocument(
+                database.getCollection(getCollectionName())
+                        .find(Filters.and(Filters.eq("firstName", firstName), Filters.eq("lastName", lastName)))
+                        .first());
     }
 
+    @Override
     public long countByFirstName(String firstName) {
-        // TODO Auto-generated method stub
-        return 0;
+        return database.getCollection(getCollectionName()).count((Filters.eq("firstName", firstName)));
     }
 
+    @Override
     public long countByLastName(String lastName) {
-        // TODO Auto-generated method stub
-        return 0;
+        return database.getCollection(getCollectionName()).count((Filters.eq("lastName", lastName)));
     }
 
+    @Override
     public long countByLastNameIgnoreCase(String lastName) {
-        // TODO Auto-generated method stub
-        return 0;
+        return database.getCollection(getCollectionName())
+                .count((Filters.eq("lastName", Pattern.compile(lastName, Pattern.CASE_INSENSITIVE))));
     }
 
+    @Override
     public String getCollectionName() {
         return "customers";
     }
 
+    @Override
     public Customer parseDocument(Document document) {
         if (document == null) {
             return null;
